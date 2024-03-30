@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo list</title>
+    <link rel="stylesheet" href="/main.css">
+</head>
+
+<body>
+    <div class="box">
+        <h1> Todo List</h1>
+        <form class="containerDB" method="post">
+            <div class="buttonContainer" id="buttonContainer">
+                <button type="submit" disabled formaction="/undo" class="iconFormaterUndo" id="iconFormaterUndo"
+                    name="undo">
+                    Undo
+                </button>
+                <button type="submit" formaction="/update" class="iconFormaterUpdate" id="iconFormaterUpdate"
+                    onclick="choice(this)" name="update" disabled>
+                    Update
+                </button>
+                <button type="submit" formaction="/delete" class="iconFormaterDelete" id="iconFormaterDelete"
+                    onclick="choice(this)" name="delete" disabled>
+                    Delete
+                </button>
+                <button type="submit" formaction="/add" class="iconFormaterAdd" id="iconFormaterAdd"
+                    onclick="choice(this)" name="add" disabled>
+                    Insert
+                </button>
+            </div>
+            <div class="container">
+                <% for(item of items){ %>
+                    <div class="separator" name="<%=item.id %>">
+                        <input onclick='hideElementsUP(this)' type="radio" value="<%=item.id%>" id="<%=item.id %>"
+                            name="RC" class="radioCheck">
+                        <input type="text" class="inputTitle" id="titleDB<%=item.id %>" value="<%= item.title %>"
+                            name="titleDBname" disabled>
+                        <textarea class="inputItensText" id="descDB<%=item.id%>" name="descDBname"
+                            disabled> <%= item.description %> </textarea>
+                    </div>
+                    <br>
+                    <% } %>
+                        <div class="separator">
+                            <input onclick='hideElementsUP(this)' type="radio" name="radioCheckAdd" id="addButtonRC"
+                                class="radioCheckAdd">
+                            <input class="inputTitle" placeholder="Title here" name="titleToInsert" id="titleAdd"
+                                disabled>
+                            <textarea class="inputItensText" placeholder="Enter some items or description here"
+                                name="descriptionDB" id="descAdd" disabled></textarea>
+                        </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+
+        //effect hover on buttons and div container
+        async function effect(button) {
+            document.getElementById("buttonContainer").style.zIndex = 1;
+            button.addEventListener("mouseover", (event) => {
+                event.target.style.opacity = '100%';
+            });
+            button.addEventListener("mouseleave", (event) => {
+                event.target.style.opacity = '70%';
+            });
+        }
+
+        //options not chosen will be hidden with that function
+        async function opacityAndBlockFields(title, desc) {
+            //opacity
+            title.style.opacity = '25%';
+            desc.style.opacity = '25%';
+
+            //disable 
+            title.disabled = true;
+            desc.disabled = true;
+        }
+
+        //button style
+        async function setButtonProperties(name) {
+            name.style.border = 'solid 2px #111';
+            name.style.cursor = 'pointer';
+            name.style.color = '#111';
+            name.style.opacity = '70%';
+            effect(name);
+            name.disabled = false;
+        }
+
+        //this function hides button depending on the action the field selected
+        async function hideButtonOnClick(btn_name) {
+            btn_name.style.display = 'none';
+        }
+
+        //this function has all scripts
+        //Also, that function can hide RC, buttons and fields, depending on the user action
+        async function hideElementsUP(choice) {
+            
+            //got ids
+            const listItems = "<%= list %>".split(',');
+            const verify = "<%= list %>"
+            console.log(verify.length);
+
+            //escape if user needs when the RC is used to UPDATE or DELETE a field
+            if (verify.length !== 0){
+                if (choice.id) {
+
+                    //here undo button will appear. Undo button settings
+                    const undo_btn = document.getElementById("iconFormaterUndo");
+                    setButtonProperties(undo_btn);
+                    undo_btn.style.display = 'block';
+
+                    //showing update button
+                    const update = document.getElementById("iconFormaterUpdate");
+                    setButtonProperties(update);
+
+                    //showing delete button
+                    const deleteBtn = document.getElementById("iconFormaterDelete");
+                    setButtonProperties(deleteBtn);
+
+                    //hidding button Add
+                    const addBtn = document.getElementById('iconFormaterAdd');
+                    hideButtonOnClick(addBtn);
+                }
+
+                //here we'll check if our user has clicked in RC
+                //a button has clicked, fields will be allowed referred to the RC clicked
+                for (item of listItems) {
+
+                    //magic happens here
+                    //basically our user choose an option and the other option will be hidden and blured
+                    if (choice.id === item) {
+                        document.getElementById(item).style.visibility = "visible";
+                        const prtTitle = document.getElementById("titleDB" + item).getAttribute('id');
+                        const prtDesc = document.getElementById("descDB" + item).getAttribute('id');
+
+                        //description and title 
+                        const hiddenAndBlockDesc = document.getElementById(prtDesc);
+                        const hiddenAndBlockTitle = document.getElementById(prtTitle);
+
+                        //enable fields
+                        hiddenAndBlockTitle.disabled = false;
+                        hiddenAndBlockDesc.disabled = false;
+
+                    }
+                    else {
+                        //here as other items not selected as add fields will be transparented and blocked
+                        //hidding radio input according to item, also for add field
+                        const addButtonRC = document.getElementById("addButtonRC").style.visibility = 'hidden';
+                        document.getElementById(item).style.visibility = 'hidden';
+
+                        //description and title will be hidden
+                        const prtTitle = document.getElementById("titleDB" + item).getAttribute('id');
+                        const prtDesc = document.getElementById("descDB" + item).getAttribute('id');
+
+                        //description and title of other fields related to item
+                        const hiddenAndBlockDesc = document.getElementById(prtDesc);
+                        const hiddenAndBlockTitle = document.getElementById(prtTitle);
+                        opacityAndBlockFields(hiddenAndBlockTitle, hiddenAndBlockDesc);
+
+                        //description and title of addButton
+                        const addButtonTitle = document.getElementById("titleAdd");
+                        const addButtonDesc = document.getElementById("descAdd");
+                        opacityAndBlockFields(addButtonTitle, addButtonDesc);
+                    }
+                }
+            }
+
+            //our user can choose a field to add some information 
+            //here this decision will be treated
+            if (choice.id === 'addButtonRC') {
+
+                //disable and hide other buttons options (Delete and Update)
+                const updateButton = document.getElementById('iconFormaterUpdate');
+                hideButtonOnClick(updateButton);
+                const deleteButton = document.getElementById('iconFormaterDelete');
+                hideButtonOnClick(deleteButton);
+
+                //here undo button will appear. Undo button settings
+                const undo_btn = document.getElementById("iconFormaterUndo");
+                setButtonProperties(undo_btn);
+                undo_btn.style.display = 'block';
+
+                //button add
+                const addButton = document.getElementById('iconFormaterAdd');
+                addButton.style.display = 'block';
+                setButtonProperties(addButton);
+                document.getElementById('addButtonRC').style.visibility = "visible";
+                const prtTitle = document.getElementById("titleAdd").getAttribute('id');
+                const prtDesc = document.getElementById("descAdd").getAttribute('id');
+
+                //description and title 
+                const desc = document.getElementById(prtDesc);
+                const title = document.getElementById(prtTitle);
+
+                //enable fields
+                title.disabled = false;
+                desc.disabled = false;
+
+                //visible fields
+                title.style.opacity = '100%';
+                desc.style.opacity = '100%';
+            }
+        }
+
+        //function used to hide icon, depending on the action button chosen
+        async function choice(click) {
+            if (click.name !== "") {
+
+                if (click.id === "iconFormaterUpdate") {
+                    const undo_btn = document.getElementById('iconFormaterUndo');
+                    hideButtonOnClick(undo_btn);
+                    const deleteBtn = document.getElementById('iconFormaterDelete');
+                    hideButtonOnClick(deleteBtn);
+                    const updateBtn = document.getElementById('iconFormaterUpdate');
+                    hideButtonOnClick(updateBtn);
+
+                } else if (click.id === 'iconFormaterAdd') {
+                    const insertBtn = document.getElementById('iconFormaterAdd');
+                    hideButtonOnClick(insertBtn);
+
+                } else {
+                    const undo_btn = document.getElementById('iconFormaterUndo');
+                    hideButtonOnClick(undo_btn);
+                    const updateBtn = document.getElementById('iconFormaterUpdate');
+                    hideButtonOnClick(updateBtn);
+                    const deleteBtn = document.getElementById('iconFormaterDelete');
+                    hideButtonOnClick(deleteBtn);
+                }
+
+                //disabling Undo button
+                const undo_btn = document.getElementById("iconFormaterUndo");
+                hideButtonOnClick(undo_btn);
+            }
+        }
+    </script>
+</body>
+
+</html>

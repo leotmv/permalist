@@ -1,0 +1,202 @@
+*{
+    outline: none;
+}
+
+html{
+    background-color: #333;
+    background-image: -webkit-linear-gradient(15deg, #111, #333);
+    overflow-y: hidden;
+    overflow-x: hidden;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.box{
+    background-color: #333;
+    width: 600px;
+    height: 600px;
+    border-radius: 0.5rem;
+    border: solid black 3px;
+    max-height: 650px;
+}
+
+/*h1 title*/
+.box > h1{
+    color: #555;
+    display: flex;
+    justify-content: center;
+    font-size: 50px;
+}
+
+/*div cage*/
+.box > .containerDB{
+    border: 1px #999 solid;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 0.5rem;
+    overflow-y: auto;
+    height: 445px;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 1px lightgray;
+    border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: darkred;
+    border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: lightgreen;
+}
+
+/*title imported*/
+.inputTitle{
+    text-align: center;
+    transition: 0.1s ease;
+    height: 50px;
+    margin-top: 0px;
+    margin-bottom: 10px;
+    color: lightblue;
+    font-size: 25px;
+    background-color: #333;
+    font-family: monospace;
+    border: solid 2px #444;
+    border-radius: 0.3rem;
+    width: auto;
+}
+
+.container{
+    width: auto;
+    display: flex;
+    height: auto;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.separator{
+    background-color: #444;
+    width: 555px;
+    height: 95px;
+    margin-top: 10px;
+    border-radius: 0.3rem;
+}
+
+.inputItensText{
+    background-color: #666;
+    color: black;
+    width: 550px;
+    min-width: 550px;
+    max-width: 550px;
+    height: 25px;
+    min-height: 25px;
+    max-height: 50px;
+    border-radius: 0.3rem;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center; 
+}
+
+.inputTitle::placeholder{
+    color:red;
+    opacity: 35%;
+}
+
+.inputItensText::placeholder{
+    color:darkred;
+    font-size: 20px;
+    opacity: 50%;
+}
+
+img:hover{
+    opacity: 50%;
+}
+
+button{
+    border-radius: 30px;
+    height: 35px;
+    font-size: 15px;
+    font-weight: bold;
+    border: solid #333 1px;
+    transition: all 0.5s ease-out;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    background-color: #333;
+    color: #333;
+    cursor: auto;
+    border: 2px solid #333;
+    opacity: 35%;
+    transform: scale(var(--scale));
+}
+
+button:hover{
+    --scale : 1.1;
+}
+
+.iconFormaterUndo{
+    width: auto;
+    display: none;
+    background-color: brown;
+}
+
+.iconFormaterUpdate{
+    width: auto;
+    background-color: skyblue;
+}
+
+.iconFormaterDelete{
+    width: auto;
+    background-color: darkred;
+}
+
+.iconFormaterAdd{
+    width: auto;
+    background-color: rgb(8, 232, 8);
+}
+
+.buttonContainer{
+    display: flex;
+    justify-content: center;
+    height: 35px;
+    padding: 2px;
+    gap: 5px;
+    position: sticky;
+    top: 0;
+    position: -webkit-sticky;
+    border: 1px solid #999;
+    border-radius: 30px;
+    background-color: #333;
+}
+
+.radioCheck{
+    accent-color: darkred;
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+}
+
+.radioCheckAdd{
+    accent-color: green;
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+}
